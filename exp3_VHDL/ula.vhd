@@ -31,10 +31,33 @@ begin
     begin
         case op is
             --operacoes aritmeticas
-            when "00" --ADD
+            when "00" => --ADD
+                if cin = '1' then f_tmp <= a_tmp + b_tmp + 1;
+                else              f_tmp <= a_tmp + b_tmp;
+                end if;
+            when "01" => --SUB
+                if cin = '1' then f_tmp <= a_tmp - b_tmp;
+                else              f_tmp <= a_tmp - b_tmp - 1;
+                end if;
+            --operacoes logicas
+            when "10" => f_tmp <= a_tmp and b_tmp; --AND
 
-            when "01" --SUB
+            when "11" => f_tmp <= a_tmp or b_tmp; --OR
 
-            when "10" --AND
+            when others => f_tmp <= (others => '0');
+        end case;
+    end process ula;
 
-            when "11" --OR
+    zero: process(f_tmp) is
+        variable zero   :   std_logic;
+    begin
+        for i in n - 1 downto 0 loop
+            if f_tmp(i) = '1' then
+                zero := '0';
+                exit;
+            else
+                zero :='1';
+            end if;
+        end loop;
+        z <= zero;
+    end process zero;
